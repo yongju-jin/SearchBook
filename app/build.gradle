@@ -32,6 +32,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = '1.8'
+        freeCompilerArgs = ["-Xallow-result-return-type"]
     }
     buildFeatures {
         dataBinding = true
@@ -58,7 +59,7 @@ dependencies {
 
     implementation "com.squareup.retrofit2:retrofit:2.7.2"
     implementation 'com.squareup.retrofit2:converter-moshi:2.7.0'
-    implementation "com.squareup.moshi:moshi:1.9.2"
+    implementation "com.squareup.moshi:moshi-kotlin:1.9.3"
 
     // hilt
     implementation "com.google.dagger:hilt-android:2.31.2-alpha"

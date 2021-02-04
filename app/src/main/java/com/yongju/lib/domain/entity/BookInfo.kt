@@ -1,5 +1,6 @@
 package com.yongju.lib.domain.entity
 
+import com.squareup.moshi.JsonClass
 import java.time.LocalDate
 
 data class BookInfo(
@@ -9,7 +10,7 @@ data class BookInfo(
     val isbn: String,
     val price: Int,
     val publisher: String,
-    val sale_price: Int,
+    val salePrice: Int,
     val status: String,
     val thumbnail: String,
     val title: String,
