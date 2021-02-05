@@ -54,12 +54,15 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
 
-    implementation "com.squareup.okhttp3:logging-interceptor:4.9.0"
-    implementation "com.squareup.okhttp3:okhttp:4.9.0"
-
+    // retrofit
     implementation "com.squareup.retrofit2:retrofit:2.7.2"
     implementation 'com.squareup.retrofit2:converter-moshi:2.7.0'
     implementation "com.squareup.moshi:moshi-kotlin:1.9.3"
+    implementation "com.squareup.okhttp3:logging-interceptor:4.9.0"
+    implementation "com.squareup.okhttp3:okhttp:4.9.0"
+
+    //coil
+    implementation "io.coil-kt:coil:1.1.1"
 
     // hilt
     implementation "com.google.dagger:hilt-android:2.31.2-alpha"

@@ -12,8 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
  */
 class MarginItemDecoration(
     private val margin: Int,
-    private val direction: Int = LEFT or TOP or RIGHT or BOTTOM,
-    private val predicate: (position: Int) -> Boolean = { true }
+    private val direction: Int = LEFT or TOP or RIGHT or BOTTOM
 ) : RecyclerView.ItemDecoration() {
 
     companion object {
@@ -23,12 +22,13 @@ class MarginItemDecoration(
         const val BOTTOM = 1 shl 3
     }
 
-    override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
+    override fun getItemOffsets(
+        outRect: Rect,
+        view: View,
+        parent: RecyclerView,
+        state: RecyclerView.State
+    ) {
         super.getItemOffsets(outRect, view, parent, state)
-
-        if (!predicate(parent.getChildAdapterPosition(view))) {
-            return
-        }
 
         if (direction and LEFT == LEFT) {
             outRect.left = margin
