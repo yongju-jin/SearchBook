@@ -84,7 +84,7 @@
                 tools:text="한 줄로 책 설명을 줄이세요." />
 
             <TextView
-                android:id="@+id/tv_book_price"
+                android:id="@+id/tv_price"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"

@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.yongju.lib.R
 import com.yongju.lib.databinding.FragmentSearchBinding
 import com.yongju.lib.presentation.base.BaseFragment
+import com.yongju.lib.presentation.ui.MainViewModel
 import com.yongju.lib.presentation.util.dp
 import com.yongju.lib.presentation.util.observe
 import com.yongju.lib.presentation.util.observeEvent
@@ -16,30 +18,25 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class SearchFragment : BaseFragment<FragmentSearchBinding>() {
     override fun layoutResId() = R.layout.fragment_search
+
     private val vm by viewModels<SearchViewModel>()
+    private val activityVM by activityViewModels<MainViewModel>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         initRV()
         subscribeState()
-        subscribeCommand()
         vm.search("kotlin")
     }
 
     private fun initRV() = with(binding.rvBooks) {
         addItemDecoration(MarginItemDecoration(8.dp(context).toInt()))
-        adapter = BookListAdapter()
+        adapter = BookListAdapter(activityVM::selectBook)
     }
 
     private fun subscribeState() = observe(vm.state) { state ->
         (binding.rvBooks.adapter as? BookListAdapter)?.submitList(state.books)
-    }
-
-    private fun subscribeCommand() = observeEvent(vm.command) { command ->
-        when (command) {
-            is SearchViewModel.Command.GoToDetail -> TODO()
-        }
     }
 
     companion object {

@@ -20,7 +20,7 @@ class SearchViewModel @Inject constructor(
 ) : ViewModel() {
 
     sealed class Command {
-        data class GoToDetail(val bookInfo: BookInfo): Command()
+        data class ShowErrorToast(val msg: String = "error"): Command()
     }
 
     data class State(
@@ -47,24 +47,29 @@ class SearchViewModel @Inject constructor(
                 Log.d("Search", "keyword: $keyword, method : $method")
                 searchBook(keyword, method).fold(
                     { bookInfos ->
-                        bookInfos.forEach { bookInfo ->
-                            Log.d("search", "bookInfo: $bookInfo")
-                        }
                         updateState { state ->
                             state.copy(books = bookInfos)
                         }
                     },
-                    { e -> e.printStackTrace() }
+                    { e ->
+                        e.printStackTrace()
+                        updateCommand(Command.ShowErrorToast())
+                    }
                 )
             }
             .catch { e ->
                 e.printStackTrace()
+                updateCommand(Command.ShowErrorToast())
             }
             .launchIn(viewModelScope)
     }
 
     private inline fun updateState(block: (State) -> State) {
         _state.value = block(requireNotNull(_state.value))
+    }
+
+    private fun updateCommand(command: Command) {
+        _command.value = Event(command)
     }
 
     fun search(keyword: String) = viewModelScope.launch {

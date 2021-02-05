@@ -8,14 +8,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.yongju.lib.databinding.ItemBookListInfoBinding
 import com.yongju.lib.domain.entity.BookInfo
 
-class BookListAdapter() : ListAdapter<BookInfo, BookListViewHolder>(getDiffItemCallback()) {
+class BookListAdapter(private val onSelectedBook: (BookInfo) -> Unit) : ListAdapter<BookInfo, BookListViewHolder>(getDiffItemCallback()) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookListViewHolder =
         BookListViewHolder(
             ItemBookListInfoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         )
 
     override fun onBindViewHolder(holder: BookListViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        holder.bind(getItem(position), onSelectedBook)
     }
 
     companion object {
@@ -32,7 +32,10 @@ class BookListAdapter() : ListAdapter<BookInfo, BookListViewHolder>(getDiffItemC
 
 class BookListViewHolder(private val binding: ItemBookListInfoBinding) :
     RecyclerView.ViewHolder(binding.root) {
-    fun bind(item: BookInfo) {
+    fun bind(item: BookInfo, onSelectedBook: (BookInfo) -> Unit) {
+        binding.root.setOnClickListener {
+            onSelectedBook(item)
+        }
         binding.item = item
     }
 }

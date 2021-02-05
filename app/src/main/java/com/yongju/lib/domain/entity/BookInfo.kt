@@ -1,8 +1,10 @@
 package com.yongju.lib.domain.entity
 
-import com.squareup.moshi.JsonClass
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 import java.time.LocalDate
 
+@Parcelize
 data class BookInfo(
     val authors: List<String>,
     val contents: String,
@@ -16,4 +18,4 @@ data class BookInfo(
     val title: String,
     val translators: List<String>,
     val url: String
-)
+) : Parcelable
