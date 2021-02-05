@@ -15,3 +15,8 @@ fun <T> AppCompatActivity.observeEvent(liveData: LiveData<Event<T>>, observer: O
 fun <T> Fragment.observeEvent(liveData: LiveData<Event<T>>, observer: Observer<T>) =
     liveData.observe(viewLifecycleOwner, observer)
 
+fun <T> Fragment.observe(liveData: LiveData<T>, observer: Observer<T>) =
+    liveData.observe(viewLifecycleOwner, observer)
+
+fun <T> AppCompatActivity.observe(liveData: LiveData<T>, observer: Observer<T>) =
+    liveData.observe(this, observer)

@@ -8,6 +8,9 @@ import androidx.fragment.app.viewModels
 import com.yongju.lib.R
 import com.yongju.lib.databinding.FragmentSearchBinding
 import com.yongju.lib.presentation.base.BaseFragment
+import com.yongju.lib.presentation.util.dp
+import com.yongju.lib.presentation.util.observe
+import com.yongju.lib.presentation.util.observeEvent
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,9 +21,25 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        Log.d("Search", "before called search")
+        initRV()
+        subscribeState()
+        subscribeCommand()
         vm.search("kotlin")
-        Log.d("Search", "after called search")
+    }
+
+    private fun initRV() = with(binding.rvBooks) {
+        addItemDecoration(MarginItemDecoration(8.dp(context).toInt()))
+        adapter = BookListAdapter()
+    }
+
+    private fun subscribeState() = observe(vm.state) { state ->
+        (binding.rvBooks.adapter as? BookListAdapter)?.submitList(state.books)
+    }
+
+    private fun subscribeCommand() = observeEvent(vm.command) { command ->
+        when (command) {
+            is SearchViewModel.Command.GoToDetail -> TODO()
+        }
     }
 
     companion object {

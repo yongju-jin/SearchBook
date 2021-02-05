@@ -5,7 +5,7 @@
 
     <data>
         <variable
-            name="book"
+            name="item"
             type="com.yongju.lib.domain.entity.BookInfo" />
     </data>
 
@@ -45,45 +45,52 @@
 
             <TextView
                 android:id="@+id/tv_name"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
+                android:text="@{item.title}"
                 app:layout_constraintEnd_toEndOf="@id/guide_favorite_start"
                 app:layout_constraintHorizontal_bias="0"
                 app:layout_constraintStart_toEndOf="@id/guide_img_end"
+                app:layout_constraintEnd_toStartOf="@id/guide_favorite_start"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="책 이름" />
 
             <TextView
                 android:id="@+id/tv_publish_date"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 app:layout_constraintStart_toStartOf="@id/tv_name"
                 app:layout_constraintTop_toBottomOf="@id/tv_name"
+                app:layout_constraintEnd_toStartOf="@id/guide_favorite_start"
                 tools:text="출시일" />
 
             <TextView
                 android:id="@+id/tv_desc"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:singleLine="true"
                 android:ellipsize="end"
+                android:text="@{item.contents}"
                 app:layout_constraintStart_toStartOf="@id/tv_name"
+                app:layout_constraintEnd_toStartOf="@id/guide_favorite_start"
                 app:layout_constraintTop_toBottomOf="@id/tv_publish_date"
                 tools:text="한 줄로 책 설명을 줄이세요." />
 
             <TextView
                 android:id="@+id/tv_book_price"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="16dp"
+                android:text="@{String.valueOf(item.salePrice)}"
                 app:layout_constraintStart_toStartOf="@id/tv_name"
                 app:layout_constraintTop_toBottomOf="@id/tv_desc"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/guide_favorite_start"
                 tools:text="책 가격" />
 
             <ImageView
