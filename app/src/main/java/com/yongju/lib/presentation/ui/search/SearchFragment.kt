@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.yongju.lib.R
 import com.yongju.lib.databinding.FragmentSearchBinding
 import com.yongju.lib.domain.entity.SearchMethod
@@ -47,6 +49,28 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
     private fun initRV() = with(binding.rvBooks) {
         addItemDecoration(MarginItemDecoration(8.dp(context).toInt()))
         adapter = BookListAdapter(activityVM::selectBook)
+
+        doOnScrolled { recyclerView ->
+            if (recyclerView.layoutManager.shouldMore) vm.loadMore()
+        }
+    }
+
+    private fun RecyclerView.doOnScrolled(block: (RecyclerView) -> Unit) {
+        addOnScrollListener(
+            object : RecyclerView.OnScrollListener() {
+                override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) =
+                    block(recyclerView)
+            }
+        )
+    }
+
+    private fun showSearchMethodMenu(searchMethod: SearchMethod) = context?.let {
+        Log.d("search", "showSearchMethodMenu")
+        SearchMethodBottomSheet(
+            it,
+            searchMethod,
+            vm::onSearchMethod
+        ).show()
     }
 
     private fun subscribeState() = observe(vm.state) { state ->
@@ -63,14 +87,16 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
     private fun showErrorToast(msg: String) {
     }
 
-    private fun showSearchMethodMenu(searchMethod: SearchMethod) = context?.let {
-        Log.d("search", "showSearchMethodMenu")
-        SearchMethodBottomSheet(
-            it,
-            searchMethod,
-            vm::onSearchMethod
-        ).show()
-    }
+
+    private inline val RecyclerView.LayoutManager?.shouldMore: Boolean
+        get() {
+            if (this !is LinearLayoutManager) return false
+            val visibleItemCount = childCount
+            val totalItemCount = itemCount
+            val firstVisibleItemPosition = findFirstVisibleItemPosition()
+
+            return (visibleItemCount + firstVisibleItemPosition) >= totalItemCount - 1 && firstVisibleItemPosition >= 0
+        }
 
     companion object {
         fun newInstance(): SearchFragment = SearchFragment()

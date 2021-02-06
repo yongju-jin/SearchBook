@@ -12,6 +12,7 @@ interface SearchBookService {
     @GET("/v3/search/book")
     suspend fun getSearchBook(
         @Query("query") query: String,
-        @Query("page") page: Int = 50,
+        @Query("target") target: String,
+        @Query("size") size: Int = 50,
     ) : SearchResponse
 }

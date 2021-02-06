@@ -82,6 +82,9 @@ class SearchViewModel @Inject constructor(
         Unit
     }
 
+    fun loadMore() {
+    }
+
     fun showSearchMethodMenu() {
         updateCommand(Command.ShowSearchMethodMenu(searchMethod.value))
     }

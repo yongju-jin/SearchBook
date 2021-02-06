@@ -17,7 +17,9 @@ class SearchBookRemoteDataSourceImpl @Inject constructor(
         searchMethod: SearchMethod
     ): Result<List<BookInfo>> {
         return kotlin.runCatching {
-            service.getSearchBook(query = keyword).documents.map {
+            val target = searchMethod.name.toLowerCase()
+
+            service.getSearchBook(query = keyword, target = target).documents.map {
                 it.toEntity()
             }
         }
