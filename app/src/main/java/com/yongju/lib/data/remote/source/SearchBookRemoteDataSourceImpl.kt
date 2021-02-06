@@ -48,5 +48,4 @@ class SearchBookRemoteDataSourceImpl @Inject constructor(
             url = url,
             isFavorite = false
         )
-
 }

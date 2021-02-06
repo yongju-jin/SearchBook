@@ -10,3 +10,8 @@ fun View.visibleIf(visible: Boolean?) {
     isVisible = visible
 }
 
+@BindingAdapter("selected")
+fun View.selected(selected: Boolean?) {
+    if (selected == null) return
+    this.isSelected = selected
+}
