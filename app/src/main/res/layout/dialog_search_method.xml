@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.yongju.lib.domain.entity.SearchMethod" />
+
+        <variable
+            name="selectedSearchMethod"
+            type="SearchMethod" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+
+        <include
+            android:id="@+id/layout_search_method_title"
+            layout="@layout/view_search_method"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            app:isSelected="@{SearchMethod.Title == selectedSearchMethod}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:searchMethod="@{SearchMethod.Title}" />
+
+        <include
+            android:id="@+id/layout_search_method_isbn"
+            layout="@layout/view_search_method"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            app:isSelected="@{SearchMethod.ISBN == selectedSearchMethod}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_search_method_title"
+            app:searchMethod="@{SearchMethod.ISBN}" />
+
+        <include
+            android:id="@+id/layout_search_method_publisher"
+            layout="@layout/view_search_method"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            app:isSelected="@{SearchMethod.Publisher == selectedSearchMethod}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_search_method_isbn"
+            app:searchMethod="@{SearchMethod.Publisher}" />
+
+        <include
+            android:id="@+id/layout_search_method_person"
+            layout="@layout/view_search_method"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            app:isSelected="@{SearchMethod.Person == selectedSearchMethod}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/layout_search_method_publisher"
+            app:searchMethod="@{SearchMethod.Person}" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

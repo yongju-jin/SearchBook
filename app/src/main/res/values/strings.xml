@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Lib</string>
+    
+    <string name="dialog_search_method_title">책 제목</string>
+    <string name="dialog_search_method_isbn">ISBN</string>
+    <string name="dialog_search_method_publisher">출판사</string>
+    <string name="dialog_search_method_person">저자</string>
 </resources>
