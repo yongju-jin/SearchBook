@@ -1,14 +1,14 @@
 package com.yongju.lib.domain.entity
 
 import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
+import kotlinx.parcelize.Parcelize
 import java.time.LocalDate
 
 @Parcelize
 data class BookInfo(
     val authors: List<String>,
     val contents: String,
-    val dateTime: LocalDate,
+    val dateTime: LocalDate?,
     val isbn: String,
     val price: Int,
     val publisher: String,

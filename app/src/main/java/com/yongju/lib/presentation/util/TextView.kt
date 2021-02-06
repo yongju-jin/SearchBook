@@ -4,7 +4,6 @@ import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import com.yongju.lib.R
 import com.yongju.lib.domain.entity.SearchMethod
-import kotlinx.android.synthetic.main.fragment_search.view.*
 import java.time.LocalDate
 
 @BindingAdapter("date")

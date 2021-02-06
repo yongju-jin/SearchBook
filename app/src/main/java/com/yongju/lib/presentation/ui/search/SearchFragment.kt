@@ -35,6 +35,7 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
         }
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -54,9 +55,12 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
 
     private fun subscribeViewCommand() = observeEvent(vm.command) { command ->
         when (command) {
-            is SearchViewModel.Command.ShowErrorToast -> TODO()
+            is SearchViewModel.Command.ShowErrorToast -> showErrorToast(command.msg)
             is SearchViewModel.Command.ShowSearchMethodMenu -> showSearchMethodMenu(command.searchMethod)
         }
+    }
+
+    private fun showErrorToast(msg: String) {
     }
 
     private fun showSearchMethodMenu(searchMethod: SearchMethod) = context?.let {

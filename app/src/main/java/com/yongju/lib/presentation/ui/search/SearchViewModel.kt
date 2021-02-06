@@ -20,8 +20,8 @@ class SearchViewModel @Inject constructor(
 ) : ViewModel() {
 
     sealed class Command {
-        data class ShowErrorToast(val msg: String = "error"): Command()
-        data class ShowSearchMethodMenu(val searchMethod: SearchMethod): Command()
+        data class ShowErrorToast(val msg: String = "error") : Command()
+        data class ShowSearchMethodMenu(val searchMethod: SearchMethod) : Command()
     }
 
     data class State(
@@ -29,18 +29,19 @@ class SearchViewModel @Inject constructor(
     )
 
     private val _state = MutableLiveData(State())
-    val state : LiveData<State>
+    val state: LiveData<State>
         get() = _state
 
     private val _command = MutableLiveData<Event<Command>>()
-    val command : LiveData<Event<Command>>
+    val command: LiveData<Event<Command>>
         get() = _command
 
     private val keyword = MutableStateFlow("")
     private val searchMethod = MutableStateFlow(SearchMethod.Title)
 
     init {
-        keyword.combine(searchMethod, ::Pair)
+        keyword
+            .combine(searchMethod, ::Pair)
             .debounce(300)
             .conflate()
             .filter { (keyword, _) -> keyword.isNotEmpty() }
@@ -73,8 +74,12 @@ class SearchViewModel @Inject constructor(
         _command.value = Event(command)
     }
 
-    fun search(keyword: String) = viewModelScope.launch {
-        this@SearchViewModel.keyword.emit(keyword)
+    fun onSearch(keyword: String) {
+        Log.d("search", "keyword: $keyword")
+        viewModelScope.launch {
+            this@SearchViewModel.keyword.emit(keyword)
+        }
+        Unit
     }
 
     fun showSearchMethodMenu() {

@@ -1,8 +1,6 @@
 package com.yongju.lib.data.remote.source
 
-import android.util.Log
 import com.yongju.lib.data.remote.model.Document
-import com.yongju.lib.data.remote.model.SearchResponse
 import com.yongju.lib.data.remote.service.SearchBookService
 import com.yongju.lib.data.repo.SearchBookDataSource
 import com.yongju.lib.domain.entity.BookInfo
@@ -29,7 +27,11 @@ class SearchBookRemoteDataSourceImpl @Inject constructor(
         BookInfo(
             authors = authors,
             contents = contents,
-            dateTime = LocalDate.parse(datetime, DateTimeFormatter.ISO_DATE_TIME),
+            dateTime = try {
+                LocalDate.parse(datetime, DateTimeFormatter.ISO_DATE_TIME)
+            } catch (e: Exception) {
+                null
+            },
             isbn = isbn,
             price = price,
             publisher = publisher,
