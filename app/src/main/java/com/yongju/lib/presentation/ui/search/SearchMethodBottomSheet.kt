@@ -24,6 +24,17 @@ class SearchMethodBottomSheet(
         }
         setContentView(binding.root)
 
+        setCanceledOnTouchOutside(true)
         setCancelable(true)
+
+        val callbackWrapper = { searchMethod: SearchMethod ->
+            callback(searchMethod)
+            dismiss()
+        }
+
+        binding.layoutSearchMethodTitle.onClickSearchMethod = callbackWrapper
+        binding.layoutSearchMethodIsbn.onClickSearchMethod = callbackWrapper
+        binding.layoutSearchMethodPublisher.onClickSearchMethod = callbackWrapper
+        binding.layoutSearchMethodPerson.onClickSearchMethod = callbackWrapper
     }
 }

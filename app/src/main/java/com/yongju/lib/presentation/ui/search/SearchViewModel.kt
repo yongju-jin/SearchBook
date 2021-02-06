@@ -21,7 +21,7 @@ class SearchViewModel @Inject constructor(
 
     sealed class Command {
         data class ShowErrorToast(val msg: String = "error"): Command()
-        object ShowSearchMethodMenu: Command()
+        data class ShowSearchMethodMenu(val searchMethod: SearchMethod): Command()
     }
 
     data class State(
@@ -78,10 +78,11 @@ class SearchViewModel @Inject constructor(
     }
 
     fun showSearchMethodMenu() {
-        updateCommand(Command.ShowSearchMethodMenu)
+        updateCommand(Command.ShowSearchMethodMenu(searchMethod.value))
     }
 
     fun onSearchMethod(searchMethod: SearchMethod) {
+        Log.d("search", "searchMethod: $searchMethod")
         viewModelScope.launch {
             this@SearchViewModel.searchMethod.emit(searchMethod)
         }

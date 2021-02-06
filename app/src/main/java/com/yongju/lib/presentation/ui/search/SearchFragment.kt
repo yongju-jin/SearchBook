@@ -55,15 +55,15 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
     private fun subscribeViewCommand() = observeEvent(vm.command) { command ->
         when (command) {
             is SearchViewModel.Command.ShowErrorToast -> TODO()
-            SearchViewModel.Command.ShowSearchMethodMenu -> showSearchMethodMenu()
+            is SearchViewModel.Command.ShowSearchMethodMenu -> showSearchMethodMenu(command.searchMethod)
         }
     }
 
-    private fun showSearchMethodMenu() = context?.let {
+    private fun showSearchMethodMenu(searchMethod: SearchMethod) = context?.let {
         Log.d("search", "showSearchMethodMenu")
         SearchMethodBottomSheet(
             it,
-            SearchMethod.Title,
+            searchMethod,
             vm::onSearchMethod
         ).show()
     }
