@@ -1,12 +1,12 @@
-package com.yongju.lib.domain.entity
+package com.yongju.lib.data.local.db
 
-import android.os.Parcelable
-import kotlinx.parcelize.Parcelize
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import java.time.LocalDate
 
-@Parcelize
+@Entity
 data class BookInfo(
-    val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val authors: List<String>,
     val contents: String,
     val dateTime: LocalDate?,
@@ -19,5 +19,6 @@ data class BookInfo(
     val title: String,
     val translators: List<String>,
     val url: String,
-    val isFavorite: Boolean
-) : Parcelable
+    val isFavorite: Boolean = false
+)
+

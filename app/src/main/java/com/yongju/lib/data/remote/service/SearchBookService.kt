@@ -14,5 +14,6 @@ interface SearchBookService {
         @Query("query") query: String,
         @Query("target") target: String,
         @Query("size") size: Int = 50,
+        @Query("page") page: Int,
     ) : SearchResponse
 }

@@ -2,7 +2,7 @@ package com.yongju.lib.data.remote.source
 
 import com.yongju.lib.data.remote.model.Document
 import com.yongju.lib.data.remote.service.SearchBookService
-import com.yongju.lib.data.repo.SearchBookDataSource
+import com.yongju.lib.data.repo.SearchBookRemoteDataSource
 import com.yongju.lib.domain.entity.BookInfo
 import com.yongju.lib.domain.entity.SearchMethod
 import java.time.LocalDate
@@ -11,15 +11,16 @@ import javax.inject.Inject
 
 class SearchBookRemoteDataSourceImpl @Inject constructor(
     private val service: SearchBookService
-) : SearchBookDataSource {
+) : SearchBookRemoteDataSource {
     override suspend fun getSearchBook(
         keyword: String,
-        searchMethod: SearchMethod
+        searchMethod: SearchMethod,
+        page: Int,
     ): Result<List<BookInfo>> {
         return kotlin.runCatching {
             val target = searchMethod.name.toLowerCase()
 
-            service.getSearchBook(query = keyword, target = target).documents.map {
+            service.getSearchBook(query = keyword, target = target, page = page).documents.map {
                 it.toEntity()
             }
         }
@@ -27,6 +28,7 @@ class SearchBookRemoteDataSourceImpl @Inject constructor(
 
     private fun Document.toEntity(): BookInfo =
         BookInfo(
+            id = 0,
             authors = authors,
             contents = contents,
             dateTime = try {
@@ -42,7 +44,8 @@ class SearchBookRemoteDataSourceImpl @Inject constructor(
             thumbnail = thumbnail,
             title = title,
             translators = translators,
-            url = url
+            url = url,
+            isFavorite = false
         )
 
 }

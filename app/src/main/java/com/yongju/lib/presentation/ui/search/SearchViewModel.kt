@@ -8,15 +8,18 @@ import androidx.lifecycle.viewModelScope
 import com.yongju.lib.domain.entity.BookInfo
 import com.yongju.lib.domain.entity.SearchMethod
 import com.yongju.lib.domain.usecase.SearchBook
+import com.yongju.lib.domain.usecase.SearchMore
 import com.yongju.lib.presentation.util.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val searchBook: SearchBook
+    private val searchBook: SearchBook,
+    private val searchMore: SearchMore
 ) : ViewModel() {
 
     sealed class Command {
@@ -39,25 +42,23 @@ class SearchViewModel @Inject constructor(
     private val keyword = MutableStateFlow("")
     private val searchMethod = MutableStateFlow(SearchMethod.Title)
 
+    private var loadMoreJob: Job? = null
+
     init {
         keyword
             .combine(searchMethod, ::Pair)
             .debounce(300)
             .conflate()
             .filter { (keyword, _) -> keyword.isNotEmpty() }
-            .onEach { (keyword, method) ->
-                Log.d("Search", "keyword: $keyword, method : $method")
-                searchBook(keyword, method).fold(
-                    { bookInfos ->
-                        updateState { state ->
-                            state.copy(books = bookInfos)
-                        }
-                    },
-                    { e ->
-                        e.printStackTrace()
-                        updateCommand(Command.ShowErrorToast())
-                    }
-                )
+            .flatMapLatest { (keyword, method) ->
+                Log.d("search", "flatmap: ${keyword}, $method")
+                searchBook(keyword, method)
+            }
+            .onEach { bookInfos ->
+                Log.d("search", "bookInfos: ${bookInfos.size}")
+                updateState { state ->
+                    state.copy(books = bookInfos)
+                }
             }
             .catch { e ->
                 e.printStackTrace()
@@ -83,6 +84,11 @@ class SearchViewModel @Inject constructor(
     }
 
     fun loadMore() {
+        if (loadMoreJob?.isActive == true)  return
+
+        loadMoreJob = viewModelScope.launch {
+            searchMore().getOrThrow()
+        }
     }
 
     fun showSearchMethodMenu() {

@@ -2,7 +2,8 @@ package com.yongju.lib.presentation.di
 
 import com.yongju.lib.data.local.source.SearchBookLocalDataSourceImpl
 import com.yongju.lib.data.remote.source.SearchBookRemoteDataSourceImpl
-import com.yongju.lib.data.repo.SearchBookDataSource
+import com.yongju.lib.data.repo.SearchBookLocalDateSource
+import com.yongju.lib.data.repo.SearchBookRemoteDataSource
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,13 +15,11 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 interface DataModule {
 
-    @Named("remote")
     @Binds
     @Singleton
-    fun provideSearchBookRemoteDataSource(remote: SearchBookRemoteDataSourceImpl): SearchBookDataSource
+    fun provideSearchBookRemoteDataSource(remote: SearchBookRemoteDataSourceImpl): SearchBookRemoteDataSource
 
-    @Named("local")
     @Binds
     @Singleton
-    fun provideSearchBookLocalDataSource(remote: SearchBookLocalDataSourceImpl): SearchBookDataSource
+    fun provideSearchBookLocalDataSource(remote: SearchBookLocalDataSourceImpl): SearchBookLocalDateSource
 }

@@ -55,6 +55,10 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0"
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.2.0"
 
+    //room
+    implementation "androidx.room:room-ktx:2.2.6"
+    kapt "androidx.room:room-compiler:2.2.6"
+
     // retrofit
     implementation "com.squareup.retrofit2:retrofit:2.7.2"
     implementation 'com.squareup.retrofit2:converter-moshi:2.7.0'
@@ -69,6 +73,7 @@ dependencies {
     implementation "com.google.dagger:hilt-android:2.31.2-alpha"
     kapt "com.google.dagger:hilt-android-compiler:2.31.2-alpha"
     implementation 'androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03'
+
 
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
