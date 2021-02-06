@@ -1,5 +1,6 @@
 package com.yongju.lib.data.remote.source
 
+import android.util.Log
 import com.yongju.lib.data.remote.model.Document
 import com.yongju.lib.data.remote.service.SearchBookService
 import com.yongju.lib.data.repo.SearchBookRemoteDataSource
@@ -16,13 +17,13 @@ class SearchBookRemoteDataSourceImpl @Inject constructor(
         keyword: String,
         searchMethod: SearchMethod,
         page: Int,
-    ): Result<List<BookInfo>> {
+    ): Result<Pair<List<BookInfo>, Boolean>> {
         return kotlin.runCatching {
             val target = searchMethod.name.toLowerCase()
 
-            service.getSearchBook(query = keyword, target = target, page = page).documents.map {
-                it.toEntity()
-            }
+            val response = service.getSearchBook(query = keyword, target = target, page = page)
+            Log.d("search", "meta: ${response.meta}")
+            response.documents.map { it.toEntity() } to response.meta.isEnd
         }
     }
 

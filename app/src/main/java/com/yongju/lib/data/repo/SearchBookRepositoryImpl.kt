@@ -18,7 +18,7 @@ class SearchBookRepositoryImpl @Inject constructor(
     private var latestKeyword: String? = null
     private var latestSearchMethod: SearchMethod? = null
     private val page = AtomicInteger(1)
-    private var isAvailableLoadMore = false
+    private var isEnd = false
 
     override suspend fun searchBook(
         keyword: String,
@@ -30,11 +30,10 @@ class SearchBookRepositoryImpl @Inject constructor(
         page.set(1)
 
         local.clear().getOrThrow()
-        local.updateSearchBook(
-            remote.getSearchBook(keyword, searchMethod, page.get()).getOrThrow().also {
-                isAvailableLoadMore = it.size == 50
-            }
-        ).getOrThrow()
+
+        val remoteResponse = remote.getSearchBook(keyword, searchMethod, page.get()).getOrThrow()
+        isEnd = remoteResponse.second
+        local.updateSearchBook(remoteResponse.first).getOrThrow()
         return local.getAll()
     }
 
@@ -42,14 +41,15 @@ class SearchBookRepositoryImpl @Inject constructor(
         val latestKeyword = this.latestKeyword
         val latestSearchMethod = this.latestSearchMethod
         return when {
-            !isAvailableLoadMore -> {
+            isEnd -> {
                 Result.success(Unit)
             }
-            (latestKeyword != null && latestSearchMethod != null) -> {
-                val response =
+            (latestKeyword != null && latestSearchMethod != null) -> kotlin.runCatching {
+                val remoteResponse =
                     remote.getSearchBook(latestKeyword, latestSearchMethod, page.addAndGet(1))
                         .getOrThrow()
-                local.updateSearchBook(response)
+                isEnd = remoteResponse.second
+                local.updateSearchBook(remoteResponse.first).getOrThrow()
             }
             else ->
                 Result.failure(IllegalStateException("latestKeyword or latestSearchMethod is null"))
