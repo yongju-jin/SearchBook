@@ -12,10 +12,9 @@ abstract class BaseActivity<B : ViewDataBinding> : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val layoutResId = layoutResId() ?: return
+        val layoutResId = layoutResId()
         binding = DataBindingUtil.setContentView<B>(this, layoutResId).apply {
             lifecycleOwner = this@BaseActivity
         }
     }
-
 }
