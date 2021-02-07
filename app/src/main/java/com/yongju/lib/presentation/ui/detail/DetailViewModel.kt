@@ -3,15 +3,18 @@ package com.yongju.lib.presentation.ui.detail
 import android.util.Log
 import androidx.lifecycle.*
 import com.yongju.lib.domain.entity.BookInfo
+import com.yongju.lib.domain.usecase.UpdateFavorite
 import com.yongju.lib.presentation.util.Event
+import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
-@ViewModelScoped
+@HiltViewModel
 class DetailViewModel @Inject constructor(
-    private val saved: SavedStateHandle
+    private val saved: SavedStateHandle,
+    private val updateFavorite: UpdateFavorite,
 ) : ViewModel() {
 
     sealed class Command {
@@ -19,7 +22,7 @@ class DetailViewModel @Inject constructor(
     }
 
     data class State(
-        val id: Int? = null,
+        val id: Long = -1,
         val img: String? = null,
         val title: String? = null,
         val publishDate: LocalDate? = null,
@@ -69,9 +72,14 @@ class DetailViewModel @Inject constructor(
     }
 
     fun onFavorite(currentSelected: Boolean) {
-        Log.d("detail", "currentSelected: $currentSelected")
-        updateState { state ->
-            state.copy(isFavorite = currentSelected.not())
+        viewModelScope.launch {
+            updateState { state ->
+                val id = state.id
+                val isFavorite = currentSelected.not()
+                Log.d("detail", "id: ${state.id}, currentSelected: $currentSelected")
+                updateFavorite(id, isFavorite).getOrThrow()
+                state.copy(isFavorite = currentSelected.not())
+            }
         }
     }
 }

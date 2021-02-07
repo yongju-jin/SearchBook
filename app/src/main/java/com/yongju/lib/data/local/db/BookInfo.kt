@@ -6,7 +6,7 @@ import java.time.LocalDate
 
 @Entity
 data class BookInfo(
-    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val authors: List<String>,
     val contents: String,
     val dateTime: LocalDate?,

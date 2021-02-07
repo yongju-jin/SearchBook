@@ -55,4 +55,8 @@ class SearchBookRepositoryImpl @Inject constructor(
                 Result.failure(IllegalStateException("latestKeyword or latestSearchMethod is null"))
         }
     }
+
+    override suspend fun updateFavorite(id: Long, isFavorite: Boolean): Result<Unit> {
+        return local.updateFavorite(id, isFavorite)
+    }
 }

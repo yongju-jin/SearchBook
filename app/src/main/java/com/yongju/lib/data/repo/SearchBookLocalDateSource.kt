@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.Flow
 
 interface SearchBookLocalDateSource {
     suspend fun getAll(): Flow<List<BookInfo>>
-    suspend fun updateSearchBook(bookInfos: List<BookInfo>) : Result<Unit>
+    suspend fun updateSearchBook(bookInfos: List<BookInfo>): Result<Unit>
     suspend fun clear(): Result<Unit>
+    suspend fun updateFavorite(id: Long, isFavorite: Boolean): Result<Unit>
 }

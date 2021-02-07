@@ -63,4 +63,10 @@ class SearchBookLocalDataSourceImpl @Inject constructor(
             db.bookInfoDao().insertAll(bookInfo = dbBookInfos.toTypedArray())
         }
     }
+
+    override suspend fun updateFavorite(id: Long, isFavorite: Boolean): Result<Unit> {
+        return kotlin.runCatching {
+            db.bookInfoDao().updateFavorite(id, isFavorite)
+        }
+    }
 }

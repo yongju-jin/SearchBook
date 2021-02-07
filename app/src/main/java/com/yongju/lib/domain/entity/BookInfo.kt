@@ -6,7 +6,7 @@ import java.time.LocalDate
 
 @Parcelize
 data class BookInfo(
-    val id: Int,
+    val id: Long,
     val authors: List<String>,
     val contents: String,
     val dateTime: LocalDate?,

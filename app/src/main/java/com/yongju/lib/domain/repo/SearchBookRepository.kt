@@ -7,4 +7,5 @@ import kotlinx.coroutines.flow.Flow
 interface SearchBookRepository {
     suspend fun searchBook(keyword: String, searchMethod: SearchMethod): Flow<List<BookInfo>>
     suspend fun searchMore(): Result<Unit>
+    suspend fun updateFavorite(id: Long, isFavorite: Boolean): Result<Unit>
 }
