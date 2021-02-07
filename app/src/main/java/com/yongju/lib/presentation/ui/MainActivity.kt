@@ -28,6 +28,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     private fun observeCommand() = observeEvent(vm.command) { command ->
         when(command) {
             is MainViewModel.Command.GoToDetail -> setFragment(DetailFragment.newInstance(command.bookInfo))
+            MainViewModel.Command.GoBack -> onBackPressed()
         }
     }
 
