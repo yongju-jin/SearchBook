@@ -1,13 +1,12 @@
 package com.yongju.lib.presentation.ui.detail
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.*
 import com.yongju.lib.domain.entity.BookInfo
 import com.yongju.lib.presentation.util.Event
 import dagger.hilt.android.scopes.ViewModelScoped
+import kotlinx.coroutines.launch
+import java.time.LocalDate
 import javax.inject.Inject
 
 @ViewModelScoped
@@ -16,20 +15,29 @@ class DetailViewModel @Inject constructor(
 ) : ViewModel() {
 
     sealed class Command {
-        object ShowErrorToast: Command()
+        object ShowErrorToast : Command()
     }
 
     data class State(
-        val book: BookInfo? = null
+        val id: Int? = null,
+        val img: String? = null,
+        val title: String? = null,
+        val publishDate: LocalDate? = null,
+        val price: Int? = null,
+        val publisher: String? = null,
+        val contents: String? = null,
+        val isFavorite: Boolean = false
     )
 
     private val _state = MutableLiveData(State())
-    val state : LiveData<State>
+    val state: LiveData<State>
         get() = _state
 
     private val _command = MutableLiveData<Event<Command>>()
-    val command : LiveData<Event<Command>>
+    val command: LiveData<Event<Command>>
         get() = _command
+
+    val isFavorite = state.map(State::isFavorite).distinctUntilChanged()
 
     init {
         val bookInfo: BookInfo? = saved["bookInfo"]
@@ -38,7 +46,16 @@ class DetailViewModel @Inject constructor(
             updateCommand(Command.ShowErrorToast)
         } else {
             updateState { state ->
-                state.copy(book = bookInfo)
+                state.copy(
+                    id = bookInfo.id,
+                    img = bookInfo.thumbnail,
+                    title = bookInfo.title,
+                    publishDate = bookInfo.dateTime,
+                    price = bookInfo.price,
+                    publisher = bookInfo.publisher,
+                    contents = bookInfo.contents,
+                    isFavorite = bookInfo.isFavorite
+                )
             }
         }
     }
@@ -49,5 +66,12 @@ class DetailViewModel @Inject constructor(
 
     private fun updateCommand(command: Command) {
         _command.value = Event(command)
+    }
+
+    fun onFavorite(currentSelected: Boolean) {
+        Log.d("detail", "currentSelected: $currentSelected")
+        updateState { state ->
+            state.copy(isFavorite = currentSelected.not())
+        }
     }
 }

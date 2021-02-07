@@ -13,6 +13,7 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor() : ViewModel() {
     sealed class Command {
+        object GoBack : Command()
         data class GoToDetail(val bookInfo: BookInfo) : Command()
     }
 
@@ -29,5 +30,9 @@ class MainViewModel @Inject constructor() : ViewModel() {
 
     private fun updateCommand(command: Command) {
         _command.value = Event(command)
+    }
+
+    fun back() {
+        updateCommand(Command.GoBack)
     }
 }
