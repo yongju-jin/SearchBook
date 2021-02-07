@@ -26,14 +26,23 @@ class MainActivity : BaseActivity<ActivityMainBinding>() {
     }
 
     private fun observeCommand() = observeEvent(vm.command) { command ->
-        when(command) {
+        when (command) {
             is MainViewModel.Command.GoToDetail -> setFragment(DetailFragment.newInstance(command.bookInfo))
             MainViewModel.Command.GoBack -> onBackPressed()
         }
     }
 
-    private fun setFragment(fragment: Fragment, addToBackStack: Boolean = true) = supportFragmentManager.commit {
-        if (addToBackStack) addToBackStack(null)
-        replace(binding.container.id, fragment)
-    }
+    private fun setFragment(fragment: Fragment, addToBackStack: Boolean = true) =
+        supportFragmentManager.commit {
+            if (addToBackStack) addToBackStack(null)
+
+            val currentFragment = supportFragmentManager.findFragmentById(binding.container.id)
+            if (currentFragment is SharedTransitionable) {
+                val sharedElements = currentFragment.getSharedElement()
+                sharedElements.forEach { (view, transitionName) ->
+                    addSharedElement(view, transitionName)
+                }
+            }
+            replace(binding.container.id, fragment)
+        }
 }

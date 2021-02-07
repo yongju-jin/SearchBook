@@ -15,17 +15,20 @@ import com.yongju.lib.databinding.FragmentSearchBinding
 import com.yongju.lib.domain.entity.SearchMethod
 import com.yongju.lib.presentation.base.BaseFragment
 import com.yongju.lib.presentation.ui.MainViewModel
+import com.yongju.lib.presentation.ui.SharedTransitionable
 import com.yongju.lib.presentation.util.dp
 import com.yongju.lib.presentation.util.observe
 import com.yongju.lib.presentation.util.observeEvent
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SearchFragment : BaseFragment<FragmentSearchBinding>() {
+class SearchFragment : BaseFragment<FragmentSearchBinding>(), SharedTransitionable {
     override fun layoutResId() = R.layout.fragment_search
 
     private val vm by viewModels<SearchViewModel>()
     private val activityVM by activityViewModels<MainViewModel>()
+
+    private var transitionView: List<View> = listOf()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -48,7 +51,13 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
 
     private fun initRV() = with(binding.rvBooks) {
         addItemDecoration(MarginItemDecoration(8.dp(context).toInt()))
-        adapter = BookListAdapter(activityVM::selectBook)
+        adapter = BookListAdapter { binding, bookInfo ->
+            transitionView = listOf(
+                binding.ivImg,
+                binding.ivFavorite
+            )
+            activityVM.selectBook(bookInfo)
+        }
 
         doOnScrolled { recyclerView ->
             if (recyclerView.layoutManager.shouldMore) vm.loadMore()
@@ -97,6 +106,13 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>() {
 
             return (visibleItemCount + firstVisibleItemPosition) >= totalItemCount - 1 && firstVisibleItemPosition >= 0
         }
+
+
+    override fun getSharedElement(): List<Pair<View, String>> {
+        return transitionView.map {
+            it to it.transitionName
+        }
+    }
 
     companion object {
         fun newInstance(): SearchFragment = SearchFragment()

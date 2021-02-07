@@ -1,6 +1,7 @@
 package com.yongju.lib.presentation.ui.detail
 
 import android.os.Bundle
+import android.transition.TransitionInflater
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +23,12 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>() {
     private val vm by viewModels<DetailViewModel>()
     private val activityVM by activityViewModels<MainViewModel>()
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        sharedElementEnterTransition =
+            TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -30,13 +37,19 @@ class DetailFragment : BaseFragment<FragmentDetailBinding>() {
         return super.onCreateView(inflater, container, savedInstanceState).also {
             binding.vm = vm
             binding.activityVM = activityVM
+
+            arguments?.getLong("id")?.let { id ->
+                binding.ivImg.transitionName = "bookImage$id"
+                binding.ivFavorite.transitionName = "favorite$id"
+            }
         }
     }
 
     companion object {
         fun newInstance(bookInfo: BookInfo): DetailFragment = DetailFragment().apply {
             arguments = bundleOf(
-                "bookInfo" to bookInfo
+                "bookInfo" to bookInfo,
+                "id" to bookInfo.id
             )
         }
     }
