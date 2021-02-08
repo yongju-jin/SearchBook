@@ -22,7 +22,6 @@ class SearchBookRemoteDataSourceImpl @Inject constructor(
             val target = searchMethod.name.toLowerCase()
 
             val response = service.getSearchBook(query = keyword, target = target, page = page)
-            Log.d("search", "meta: ${response.meta}")
             response.documents.map { it.toEntity() } to response.meta.isEnd
         }
     }

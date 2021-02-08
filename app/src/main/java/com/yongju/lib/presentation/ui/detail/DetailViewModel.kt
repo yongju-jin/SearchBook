@@ -6,7 +6,6 @@ import com.yongju.lib.domain.entity.BookInfo
 import com.yongju.lib.domain.usecase.UpdateFavorite
 import com.yongju.lib.presentation.util.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
@@ -44,7 +43,6 @@ class DetailViewModel @Inject constructor(
 
     init {
         val bookInfo: BookInfo? = saved["bookInfo"]
-        Log.d("detail", "bookInfo: $bookInfo")
         if (bookInfo == null) {
             updateCommand(Command.ShowErrorToast)
         } else {
@@ -76,7 +74,6 @@ class DetailViewModel @Inject constructor(
             updateState { state ->
                 val id = state.id
                 val isFavorite = currentSelected.not()
-                Log.d("detail", "id: ${state.id}, currentSelected: $currentSelected")
                 updateFavorite(id, isFavorite).getOrThrow()
                 state.copy(isFavorite = currentSelected.not())
             }

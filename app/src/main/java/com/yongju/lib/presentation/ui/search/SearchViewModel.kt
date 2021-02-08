@@ -1,15 +1,13 @@
 package com.yongju.lib.presentation.ui.search
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.yongju.lib.domain.entity.BookInfo
 import com.yongju.lib.domain.entity.SearchMethod
 import com.yongju.lib.domain.usecase.SearchBook
 import com.yongju.lib.domain.usecase.SearchMore
-import com.yongju.lib.presentation.util.Event
+import com.yongju.lib.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
@@ -20,7 +18,7 @@ import javax.inject.Inject
 class SearchViewModel @Inject constructor(
     private val searchBook: SearchBook,
     private val searchMore: SearchMore
-) : ViewModel() {
+) : BaseViewModel<SearchViewModel.Command>() {
 
     sealed class Command {
         data class ShowErrorToast(val msg: String = "error") : Command()
@@ -35,10 +33,6 @@ class SearchViewModel @Inject constructor(
     val state: LiveData<State>
         get() = _state
 
-    private val _command = MutableLiveData<Event<Command>>()
-    val command: LiveData<Event<Command>>
-        get() = _command
-
     private val keyword = MutableStateFlow("")
     private val searchMethod = MutableStateFlow(SearchMethod.Title)
 
@@ -51,11 +45,9 @@ class SearchViewModel @Inject constructor(
             .conflate()
             .filter { (keyword, _) -> keyword.isNotEmpty() }
             .flatMapLatest { (keyword, method) ->
-                Log.d("search", "flatmap: ${keyword}, $method")
                 searchBook(keyword, method)
             }
             .onEach { bookInfos ->
-                Log.d("search", "bookInfos: ${bookInfos.size}")
                 updateState { state ->
                     state.copy(books = bookInfos)
                 }
@@ -71,16 +63,10 @@ class SearchViewModel @Inject constructor(
         _state.value = block(requireNotNull(_state.value))
     }
 
-    private fun updateCommand(command: Command) {
-        _command.value = Event(command)
-    }
-
     fun onSearch(keyword: String) {
-        Log.d("search", "keyword: $keyword")
         viewModelScope.launch {
             this@SearchViewModel.keyword.emit(keyword)
         }
-        Unit
     }
 
     fun loadMore() {
@@ -96,7 +82,6 @@ class SearchViewModel @Inject constructor(
     }
 
     fun onSearchMethod(searchMethod: SearchMethod) {
-        Log.d("search", "searchMethod: $searchMethod")
         viewModelScope.launch {
             this@SearchViewModel.searchMethod.emit(searchMethod)
         }

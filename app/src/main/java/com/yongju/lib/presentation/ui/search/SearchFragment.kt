@@ -74,7 +74,6 @@ class SearchFragment : BaseFragment<FragmentSearchBinding>(), SharedTransitionab
     }
 
     private fun showSearchMethodMenu(searchMethod: SearchMethod) = context?.let {
-        Log.d("search", "showSearchMethodMenu")
         SearchMethodBottomSheet(
             it,
             searchMethod,
