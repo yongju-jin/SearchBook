@@ -33,3 +33,17 @@ fun <T> LiveData<T>.getOrAwaitValue(
     @Suppress("UNCHECKED_CAST")
     return data as T
 }
+
+class TestObserver<T> : Observer<T> {
+    val data = mutableListOf<T>()
+    override fun onChanged(t: T) {
+        data.add(t)
+    }
+}
+
+fun <T> LiveData<T>.testWithTriggers(block: () -> Unit): TestObserver<T> {
+    val testObserver = TestObserver<T>()
+    this.observeForever(testObserver)
+    block()
+    return testObserver
+}

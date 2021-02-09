@@ -1,12 +1,10 @@
 package com.yongju.lib.presentation.ui.detail
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.yongju.lib.domain.entity.BookInfo
 import com.yongju.lib.domain.usecase.UpdateFavorite
-import com.yongju.lib.presentation.util.Event
+import com.yongju.lib.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 import javax.inject.Inject
 
@@ -14,7 +12,7 @@ import javax.inject.Inject
 class DetailViewModel @Inject constructor(
     private val saved: SavedStateHandle,
     private val updateFavorite: UpdateFavorite,
-) : ViewModel() {
+) : BaseViewModel<DetailViewModel.Command>() {
 
     sealed class Command {
         object ShowErrorToast : Command()
@@ -34,10 +32,6 @@ class DetailViewModel @Inject constructor(
     private val _state = MutableLiveData(State())
     val state: LiveData<State>
         get() = _state
-
-    private val _command = MutableLiveData<Event<Command>>()
-    val command: LiveData<Event<Command>>
-        get() = _command
 
     val isFavorite = state.map(State::isFavorite).distinctUntilChanged()
 
@@ -65,18 +59,19 @@ class DetailViewModel @Inject constructor(
         _state.value = block(requireNotNull(_state.value))
     }
 
-    private fun updateCommand(command: Command) {
-        _command.value = Event(command)
-    }
-
     fun onFavorite(currentSelected: Boolean) {
-        viewModelScope.launch {
-            updateState { state ->
-                val id = state.id
-                val isFavorite = currentSelected.not()
-                updateFavorite(id, isFavorite).getOrThrow()
-                state.copy(isFavorite = currentSelected.not())
+        launch (
+            e = {
+                updateCommand(Command.ShowErrorToast)
+            },
+            block = {
+                updateState { state ->
+                    val id = state.id
+                    val isFavorite = currentSelected.not()
+                    updateFavorite(id, isFavorite).getOrThrow()
+                    state.copy(isFavorite = currentSelected.not())
+                }
             }
-        }
+        )
     }
 }

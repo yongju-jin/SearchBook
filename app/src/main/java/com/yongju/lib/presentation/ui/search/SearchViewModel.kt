@@ -11,7 +11,6 @@ import com.yongju.lib.presentation.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -64,17 +63,26 @@ class SearchViewModel @Inject constructor(
     }
 
     fun onSearch(keyword: String) {
-        viewModelScope.launch {
-            this@SearchViewModel.keyword.emit(keyword)
-        }
+        launch(
+            e = ::handleError,
+            block = {
+                this@SearchViewModel.keyword.emit(keyword)
+            })
+    }
+
+    private fun handleError(e: Throwable) {
+        updateCommand(Command.ShowErrorToast())
     }
 
     fun loadMore() {
-        if (loadMoreJob?.isActive == true)  return
+        if (loadMoreJob?.isActive == true) return
 
-        loadMoreJob = viewModelScope.launch {
-            searchMore().getOrThrow()
-        }
+        loadMoreJob = launch(
+            e = ::handleError,
+            block = {
+                searchMore().getOrThrow()
+            }
+        )
     }
 
     fun showSearchMethodMenu() {
@@ -82,8 +90,11 @@ class SearchViewModel @Inject constructor(
     }
 
     fun onSearchMethod(searchMethod: SearchMethod) {
-        viewModelScope.launch {
-            this@SearchViewModel.searchMethod.emit(searchMethod)
-        }
+        launch(
+            e = ::handleError,
+            block = {
+                this@SearchViewModel.searchMethod.emit(searchMethod)
+            }
+        )
     }
 }
